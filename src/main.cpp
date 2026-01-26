@@ -25,6 +25,7 @@
 #include "activities/settings/SettingsActivity.h"
 #include "activities/util/FullScreenMessageActivity.h"
 #include "fontIds.h"
+#include "util/ButtonNavigator.h"
 
 #define SPI_FQ 40000000
 // Display SPI pins (custom pins for XteinkX4, not hardware SPI defaults)
@@ -321,6 +322,7 @@ void setup() {
 
   SETTINGS.loadFromFile();
   KOREADER_STORE.loadFromFile();
+  ButtonNavigator::setMappedInputManager(mappedInputManager);
 
   if (!isWakeupAfterFlashing()) {
     // For normal wakeups (not immediately after flashing), verify long press

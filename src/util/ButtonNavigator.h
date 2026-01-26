@@ -1,0 +1,44 @@
+#pragma once
+
+#include <functional>
+#include <vector>
+
+#include "MappedInputManager.h"
+
+class ButtonNavigator final {
+  using Callback = std::function<void()>;
+  using Buttons = std::vector<MappedInputManager::Button>;
+
+  const uint16_t continuousStartMs;
+  const uint16_t continuousIntervalMs;
+  uint32_t lastContinuousNavTime = 0;
+
+  static const MappedInputManager* mappedInput;
+
+  [[nodiscard]] bool shouldNavigateContinuously() const;
+  [[nodiscard]] bool recentlyNavigatedContinuously();
+
+  [[nodiscard]] static Buttons getNextButtons() {
+    return {MappedInputManager::Button::Down, MappedInputManager::Button::Right};
+  }
+  [[nodiscard]] static Buttons getPreviousButtons() {
+    return {MappedInputManager::Button::Up, MappedInputManager::Button::Left};
+  }
+
+ public:
+  explicit ButtonNavigator(const uint16_t continuousIntervalMs = 500, const uint16_t continuousStartMs = 500)
+      : continuousStartMs(continuousStartMs), continuousIntervalMs(continuousIntervalMs) {}
+
+  static void setMappedInputManager(const MappedInputManager& mappedInputManager) { mappedInput = &mappedInputManager; }
+
+  void onNext(const Callback& callback);
+  void onPrevious(const Callback& callback);
+
+  void onNextRelease(const Callback& callback);
+  void onPreviousRelease(const Callback& callback);
+  void onRelease(const Buttons& buttons, const Callback& callback);
+
+  void onNextContinuous(const Callback& callback);
+  void onPreviousContinuous(const Callback& callback);
+  void onContinuous(const Buttons& buttons, const Callback& callback);
+};
