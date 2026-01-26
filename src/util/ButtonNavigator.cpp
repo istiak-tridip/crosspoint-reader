@@ -3,32 +3,32 @@
 const MappedInputManager* ButtonNavigator::mappedInput = nullptr;
 
 void ButtonNavigator::onNext(const Callback& callback) {
-  onNextRelease(callback);
+  onNextPress(callback);
   onNextContinuous(callback);
 }
 void ButtonNavigator::onPrevious(const Callback& callback) {
-  onPreviousRelease(callback);
+  onPreviousPress(callback);
   onPreviousContinuous(callback);
 }
 
-void ButtonNavigator::onNextRelease(const Callback& callback) { onRelease(getNextButtons(), callback); }
+void ButtonNavigator::onNextPress(const Callback& callback) { onPress(getNextButtons(), callback); }
 
-void ButtonNavigator::onPreviousRelease(const Callback& callback) { onRelease(getPreviousButtons(), callback); }
+void ButtonNavigator::onPreviousPress(const Callback& callback) { onPress(getPreviousButtons(), callback); }
 
 void ButtonNavigator::onNextContinuous(const Callback& callback) { onContinuous(getNextButtons(), callback); }
 
 void ButtonNavigator::onPreviousContinuous(const Callback& callback) { onContinuous(getPreviousButtons(), callback); }
 
-void ButtonNavigator::onRelease(const Buttons& buttons, const Callback& callback) {
-  bool buttonReleased = false;
+void ButtonNavigator::onPress(const Buttons& buttons, const Callback& callback) {
+  bool buttonPressed = false;
   for (const MappedInputManager::Button button : buttons) {
-    if (mappedInput->wasReleased(button)) {
-      buttonReleased = true;
+    if (mappedInput->wasPressed(button)) {
+      buttonPressed = true;
       break;
     }
   }
 
-  if (buttonReleased && !recentlyNavigatedContinuously()) {
+  if (buttonPressed && !recentlyNavigatedContinuously()) {
     callback();
   }
 }
