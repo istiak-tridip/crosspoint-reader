@@ -6,6 +6,7 @@
 #include <functional>
 
 #include "../Activity.h"
+#include "util/ButtonNavigator.h"
 
 class HomeActivity final : public Activity {
   TaskHandle_t displayTaskHandle = nullptr;
@@ -21,6 +22,7 @@ class HomeActivity final : public Activity {
   std::string lastBookTitle;
   std::string lastBookAuthor;
   std::string coverBmpPath;
+  ButtonNavigator buttonNavigator;
   const std::function<void()> onContinueReading;
   const std::function<void()> onMyLibraryOpen;
   const std::function<void()> onSettingsOpen;
