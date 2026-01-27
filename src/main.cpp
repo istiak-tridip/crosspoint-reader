@@ -25,6 +25,7 @@
 #include "activities/settings/SettingsActivity.h"
 #include "activities/util/FullScreenMessageActivity.h"
 #include "fontIds.h"
+#include "network/ScreenCapture.h"
 #include "util/ButtonNavigator.h"
 
 #define SPI_FQ 40000000
@@ -45,6 +46,8 @@ InputManager inputManager;
 MappedInputManager mappedInputManager(inputManager);
 GfxRenderer renderer(einkDisplay);
 Activity* currentActivity;
+
+ScreenCapture screen_capture;
 
 // Fonts
 EpdFont bookerly14RegularFont(&bookerly_14_regular);
@@ -351,6 +354,8 @@ void setup() {
     onGoToReader(path, MyLibraryActivity::Tab::Recent);
   }
 
+  screen_capture.start(renderer);
+
   // Ensure we're not still holding the power button before leaving setup
   waitForPowerRelease();
 }
@@ -361,6 +366,7 @@ void loop() {
   static unsigned long lastMemPrint = 0;
 
   inputManager.update();
+  screen_capture.server.handleClient();
 
   if (Serial && millis() - lastMemPrint >= 10000) {
     Serial.printf("[%lu] [MEM] Free: %d bytes, Total: %d bytes, Min Free: %d bytes\n", millis(), ESP.getFreeHeap(),
