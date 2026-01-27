@@ -4,6 +4,8 @@ import time
 import shutil
 from PIL import Image
 from pathlib import Path
+from threading import Thread
+from queue import Queue
 
 FRAME_INTERVAL = 0.5
 FRAMES_DIR = Path("frames")
@@ -19,6 +21,19 @@ conn = http.client.HTTPConnection("192.168.110.130", timeout=5)
 frame_count = 0
 last_hash = None
 last_frame_hash = None
+
+save_queue = Queue()
+def saver_thread():
+    while True:
+        frame_height, frame_width, data = save_queue.get()
+
+        img = Image.frombytes("1", (frame_height, frame_width), data)
+        img = img.rotate(-90, expand=True)
+        img.save(FRAMES_DIR / f"frame_{frame_count:05d}.png")
+
+
+saver = Thread(target=saver_thread, daemon=True)
+saver.start()
 
 try:
     while True:
@@ -39,10 +54,7 @@ try:
             last_hash = md5_hash
             last_frame_hash=frame_hash
 
-            img = Image.frombytes("1", (int(frame_height), int(frame_width)), data)
-            img = img.rotate(-90, expand=True)
-
-            img.save(FRAMES_DIR / f"frame_{frame_count:05d}.png")
+            save_queue.put((int(frame_height), int(frame_width), data))
 
             print(f"Frame {frame_count:5d} | {frame_width}x{frame_height} | Hash: {frame_hash}")
 
