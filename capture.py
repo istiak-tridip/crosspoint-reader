@@ -8,7 +8,7 @@ from pathlib import Path
 WIDTH = 800
 HEIGHT = 480
 FRAME_SIZE = (WIDTH * HEIGHT) // 8
-FRAME_INTERVAL = 0.3  # 200 ms
+FRAME_INTERVAL = 0.5  # 200 ms
 FRAMES_DIR = Path("frames")
 
 # Clear and recreate frames folder
@@ -29,6 +29,8 @@ try:
         conn.request("GET", "/frame")
         res = conn.getresponse()
         data = res.read()
+        # Get CRC from header
+        expected_crc = res.getheader("X-Frame-CRC")
 
         md5_hash = hashlib.md5(data).hexdigest()
 
@@ -41,7 +43,7 @@ try:
 
             img.save(FRAMES_DIR / f"frame_{frame_count:05d}.png")
 
-            print(f"Saved {frame_count:5d}")
+            print(f"Saved {frame_count:5d} - {expected_crc}")
 
         elapsed = time.time() - start_time
         sleep_time = FRAME_INTERVAL - elapsed

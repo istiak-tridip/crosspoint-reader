@@ -6,7 +6,7 @@
 
 class ScreenCapture {
 public:
-    static uint8_t* bufferX;
+    uint8_t* bufferX = nullptr;
     GfxRenderer* rendererPtr = nullptr;
 
     WebServer server{80};

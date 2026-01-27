@@ -36,6 +36,7 @@ class GfxRenderer {
   void rotateCoordinates(int x, int y, int* rotatedX, int* rotatedY) const;
 
  public:
+  std::function<void()> callback;
   explicit GfxRenderer(EInkDisplay& einkDisplay) : einkDisplay(einkDisplay), renderMode(BW), orientation(Portrait) {}
   ~GfxRenderer() { freeBwBufferChunks(); }
 

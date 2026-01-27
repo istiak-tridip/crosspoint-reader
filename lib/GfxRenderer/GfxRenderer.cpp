@@ -399,6 +399,8 @@ void GfxRenderer::invertScreen() const {
 
 void GfxRenderer::displayBuffer(const EInkDisplay::RefreshMode refreshMode) const {
   einkDisplay.displayBuffer(refreshMode);
+
+  callback();
 }
 
 std::string GfxRenderer::truncatedText(const int fontId, const char* text, const int maxWidth,
