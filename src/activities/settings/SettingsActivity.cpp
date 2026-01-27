@@ -108,12 +108,12 @@ void SettingsActivity::loop() {
 
   // Handle navigation
   buttonNavigator.onNext([this] {
-    selectedCategoryIndex = (selectedCategoryIndex + 1) % categoryCount;
+    selectedCategoryIndex = ButtonNavigator::nextIndex(selectedCategoryIndex, categoryCount);
     updateRequired = true;
   });
 
   buttonNavigator.onPrevious([this] {
-    selectedCategoryIndex = (selectedCategoryIndex + categoryCount - 1) % categoryCount;
+    selectedCategoryIndex = ButtonNavigator::previousIndex(selectedCategoryIndex, categoryCount);
     updateRequired = true;
   });
 }

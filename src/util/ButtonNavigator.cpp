@@ -20,6 +20,8 @@ void ButtonNavigator::onNextContinuous(const Callback& callback) { onContinuous(
 void ButtonNavigator::onPreviousContinuous(const Callback& callback) { onContinuous(getPreviousButtons(), callback); }
 
 void ButtonNavigator::onPress(const Buttons& buttons, const Callback& callback) {
+  if (!mappedInput) return;
+
   bool buttonPressed = false;
   for (const MappedInputManager::Button button : buttons) {
     if (mappedInput->wasPressed(button)) {
@@ -34,6 +36,8 @@ void ButtonNavigator::onPress(const Buttons& buttons, const Callback& callback) 
 }
 
 void ButtonNavigator::onContinuous(const Buttons& buttons, const Callback& callback) {
+  if (!mappedInput) return;
+
   bool buttonPressed = false;
   for (const MappedInputManager::Button button : buttons) {
     if (mappedInput->isPressed(button)) {
@@ -49,6 +53,8 @@ void ButtonNavigator::onContinuous(const Buttons& buttons, const Callback& callb
 }
 
 bool ButtonNavigator::shouldNavigateContinuously() const {
+  if (!mappedInput) return false;
+
   const bool buttonHeldLongEnough = mappedInput->getHeldTime() > continuousStartMs;
   const bool navigationIntervalElapsed = (millis() - lastContinuousNavTime) > continuousIntervalMs;
 
@@ -62,4 +68,18 @@ bool ButtonNavigator::recentlyNavigatedContinuously() {
   }
 
   return false;
+}
+
+int ButtonNavigator::nextIndex(const int currentIndex, const int totalItems) {
+  if (totalItems <= 0) return 0;
+
+  // Calculate the next index with wrap-around
+  return (currentIndex + 1) % totalItems;
+}
+
+int ButtonNavigator::previousIndex(const int currentIndex, const int totalItems) {
+  if (totalItems <= 0) return 0;
+
+  // Calculate the previous index with wrap-around
+  return (currentIndex + totalItems - 1) % totalItems;
 }

@@ -41,4 +41,7 @@ class ButtonNavigator final {
   void onNextContinuous(const Callback& callback);
   void onPreviousContinuous(const Callback& callback);
   void onContinuous(const Buttons& buttons, const Callback& callback);
+
+  [[nodiscard]] static int nextIndex(int currentIndex, int totalItems);
+  [[nodiscard]] static int previousIndex(int currentIndex, int totalItems);
 };
