@@ -49,7 +49,6 @@ Activity* currentActivity;
 
 ScreenCapture screen_capture;
 
-
 // Fonts
 EpdFont bookerly14RegularFont(&bookerly_14_regular);
 EpdFont bookerly14BoldFont(&bookerly_14_bold);
@@ -327,10 +326,7 @@ void setup() {
   SETTINGS.loadFromFile();
   KOREADER_STORE.loadFromFile();
   ButtonNavigator::setMappedInputManager(mappedInputManager);
-  renderer.callback = []
-  {
-    screen_capture.bufferX = renderer.getFrameBuffer();
-  };
+  renderer.callback = [] { screen_capture.frameBuffer = renderer.getFrameBuffer(); };
 
   if (!isWakeupAfterFlashing()) {
     // For normal wakeups (not immediately after flashing), verify long press
